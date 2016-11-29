@@ -10,7 +10,7 @@
 
 #import <sqlite3.h>
 
-#define kDatabaseName @"afft"
+#define kDatabaseName @"Database"
 #define kDatabaseExt @"sqlite"
 
 @interface Database : NSObject {
