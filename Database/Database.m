@@ -666,3 +666,145 @@ static Database *singleton = nil;
 }
 
 @end
+/*
+//
+//  ViewController.swift
+//  TestApp
+//
+//  Created by Kalpesh-Jetani on 05/12/16.
+//  Copyright © 2016 OpenXcell Technolabs PVT. LTD. All rights reserved.
+//
+
+import UIKit
+
+class CellDownloader : UITableViewCell {
+    @IBOutlet var title : String?
+    @IBOutlet var progressbar : UIProgressView?
+    
+}
+
+class Song {
+    var songDownloadLink : String?
+    var songName : String?
+}
+
+class DownloadCell: UITableViewCell, NSURLSessionDelegate {
+    
+    
+    @IBOutlet weak var lblSongName: UILabel!
+    @IBOutlet weak var progressBar: UIProgressView!
+    @IBOutlet weak var progressCount: UILabel!
+    
+    var song: Song!
+    
+    var task: NSURLSessionTask!
+    
+    var percentageWritten: Float = 0.0
+    var taskTotalBytesWritten = 0
+    var taskTotalBytesExpectedToWrite = 0
+    
+    lazy var session: NSURLSession = {
+        let config = NSURLSessionConfiguration.ephemeralSessionConfiguration()
+        config.allowsCellularAccess = false
+        let session = NSURLSession(configuration: config, delegate: self, delegateQueue: NSOperationQueue.mainQueue())
+        return session
+    }()
+    
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+        
+    }
+    
+    func startDownload() {
+        
+        lblSongName.text = song.songName
+        
+        if self.task != nil {
+            return
+        }
+        let url = NSURL(string: song.songDownloadLink!)!
+        let req = NSMutableURLRequest(URL: url)
+        let task = self.session.downloadTaskWithRequest(req)
+        self.task = task
+        task.resume()
+        
+    }
+    
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten writ: Int64, totalBytesExpectedToWrite exp: Int64) {
+        taskTotalBytesWritten = Int(writ)
+        taskTotalBytesExpectedToWrite = Int(exp)
+        percentageWritten = Float(taskTotalBytesWritten) / Float(taskTotalBytesExpectedToWrite)
+        progressBar.progress = percentageWritten
+        progressCount.text = String(Int(percentageWritten*100)) + "%"
+        
+        print("(\(taskTotalBytesWritten) / \(taskTotalBytesExpectedToWrite))")
+    }
+    
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+        if error != nil {
+            print("Completed with error: \(error)")
+        }
+    }
+    
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+        
+        do {
+            let documentsDirectoryURL =  NSFileManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask).first as NSURL!
+            progressCount.text = "Done!"
+            progressBar.progress = 100.0
+            
+            try NSFileManager().moveItemAtURL(location, toURL: documentsDirectoryURL.URLByAppendingPathComponent(song.songName! + ".mp3")!)
+            
+            ////Handling Badge Values
+            //let tabBar = UIApplication.sharedApplication().keyWindow?.rootViewController as! UITabBarController
+            //let downloadVC = tabBar.viewControllers?[1] as! DownloadViewController
+            //let badgeValue = Int(downloadVC.tabBarItem.badgeValue!)! - 1
+            //downloadVC.tabBarItem.badgeValue = String(badgeValue)
+            //
+            //if badgeValue == 0 {
+            //    downloadVC.tabBarItem.badgeValue = nil
+            //}
+            
+        } catch {
+            print("Error occurred during saving.")
+            progressCount.text = String(error)
+        }
+        
+    }
+}
+
+class ViewController: UIViewController,UITableViewDelegate, UITableViewDataSource {
+
+    var array : [Song] = []
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+    
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+    }
+    
+    
+    
+    //MARK:- TableViewDelegate
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return array.count
+    }
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let cell : CellDownloader = tableView.dequeueReusableCellWithIdentifier("CellDownloader", forIndexPath: indexPath) as! CellDownloader
+        
+        cell.title = array[indexPath.row].songName
+        cell.progressbar?.progress = 1.0
+        return cell
+    }
+    
+}
+
+
+*/
