@@ -1,2 +1,2 @@
 # SupportClasses
-- store of code snippets and code snipets
+- store of code snippets and utility classes
